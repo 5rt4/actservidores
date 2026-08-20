@@ -24,8 +24,8 @@ int display[10][7]={
                     };
 
 
-volatile bool display = true;
-volatile bool numero = true;
+volatile int disp=0;
+volatile int num=0;
 
 // pagina
 const char pagina_template[] PROGMEM = R"rawliteral(
@@ -132,12 +132,22 @@ const char pagina_template[] PROGMEM = R"rawliteral(
 </html>
 )rawliteral";
 
+void ds1(){
+  for(int i=0;i<7;i++){
+    digitalWrite(d7s1[i],display[num][i]);
+  }
+}
+
+void ds2(){
+  for(int i=0;i<7;i++){
+    digitalWrite(d7s2[i],display[num][i]);
+  }      
+}
+
 void setup() {
   Serial.begin(115200);
-  for(int i=0;i<14;i++){
-    pinMode(d7s1[i], OUTPUT);
-    pinMode(d7s2[i], OUTPUT);
-  };
+  for(int i=2;i<9;i++) pinMode(d7s1[i], OUTPUT);
+  for(int i=9;i<16;i++)pinMode(d7s2[i], OUTPUT);
 
   // conexion al wifi como antes
   Serial.print("Conectando a ");
@@ -160,29 +170,84 @@ void setup() {
   Serial.print("Dirección IP: http://");
   Serial.println(WiFi.localIP());
 
-  server.on("/an1",[](){
-    animacion1=1;
-    server.sendHeader("Location", "/"); // dice que la página se vaya a /
-    server.send(302, "text/plain", ""); // 302 dice que el /toggle no está y que vaya a la locación de antes
+  server.on("/ds1",[](){
+    disp=1;
+    server.sendHeader("Location", "/");             //para ds1
+    server.send(302, "text/plain", ""); 
   });
 
-  server.on("/an2",[](){
-    animacion2=1;
-    server.sendHeader("Location", "/"); // dice que la página se vaya a /
-    server.send(302, "text/plain", ""); // 302 dice que el /toggle no está y que vaya a la locación de antes
+  server.on("/ds2",[](){
+    disp=2;
+    server.sendHeader("Location", "/");             //para ds2
+    server.send(302, "text/plain", "");
   });
 
-  server.on("/off",[](){
-    apagado=1;
-    server.sendHeader("Location", "/"); // dice que la página se vaya a /
-    server.send(302, "text/plain", ""); // 302 dice que el /toggle no está y que vaya a la locación de antes
+  server.on("/1",[](){
+    num=1;
+    server.sendHeader("Location", "/");             //para 1
+    server.send(302, "text/plain", "");
   });
+
+  server.on("/2",[](){
+    num=2;
+    server.sendHeader("Location", "/");             //para 2
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/3",[](){
+    num=3;
+    server.sendHeader("Location", "/");             //para 3
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/4",[](){
+    num=4;
+    server.sendHeader("Location", "/");             //para 4
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/5",[](){
+    num=5;
+    server.sendHeader("Location", "/");             //para 5
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/6",[](){
+    num=6;
+    server.sendHeader("Location", "/");             //para 6
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/7",[](){
+    num=7;
+    server.sendHeader("Location", "/");             //para 7
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/8",[](){
+    num=8;
+    server.sendHeader("Location", "/");             //para 8
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/9",[](){
+    num=9;
+    server.sendHeader("Location", "/");             //para 9
+    server.send(302, "text/plain", "");
+  });
+
+  server.on("/0",[](){
+    num=0;
+    server.sendHeader("Location", "/");             //para 0
+    server.send(302, "text/plain", "");
+  });
+
+
   server.begin();
 }
 
 void loop() {
   server.handleClient();
-  if(animacion1==1) anima1;
-  if(animacion2==1) anima2;
-  if(apagado==1) apaga;  
+  if(disp=1) ds1;
+  if(disp=2) ds2; 
 }

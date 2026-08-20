@@ -6,14 +6,14 @@
 const char* ssid = "CESJT";
 const char* password = "itisjtsmg";
 
-const int led[5] = {2,3,4,5,6};
+const int led[5] = {13,12,14,27,26};
 
 WebServer server(80);
 
 int anim1[5][5]={
                 {0,0,0,0,1},
                 {0,0,0,1,0},
-                {0,0,1,0,0},
+                {0,0,1,0,0},.
                 {0,1,0,0,0},
                 {1,0,0,0,0}
                 };

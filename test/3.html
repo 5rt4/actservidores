@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Semáforo</title>
+<style>
+  body {
+    background-color: white;
+    text-align: center;
+  }
+
+  .titulo {
+    font-family: Impact;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 45px;
+    text-transform: uppercase;
+  }
+
+  .boton {
+    width: 200px;
+    height: 200px;
+    color: black;
+    font-size: 23px;
+    border: 3px solid black;
+    border-radius: 100px;
+    display: block;
+    margin: 20px auto;
+  }
+
+  .lento {
+    background-color: red;
+  }
+
+  .normal {
+    background-color: yellow;
+  }
+
+  .rapido {
+    background-color: green;
+  }
+
+  .emergencia {
+    background-color: orange;
+  }
+</style>
+</head>
+<body>
+
+  <h1 class="titulo">Semáforo</h1>
+
+  <button class="boton lento" onclick="cambiarModo('Lento')">Lento</button>
+  <button class="boton normal" onclick="cambiarModo('Normal')">Normal</button>
+  <button class="boton rapido" onclick="cambiarModo('Rápido')">Rápido</button>
+  <button class="boton emergencia" onclick="cambiarModo('Emergencia')">Emergencia</button>
+
+  <span>Modo: <strong id="modo">XXX</strong></span>
+
+  <script>
+    function cambiarModo(modo) {
+      document.getElementById('modo').textContent = modo;
+    }
+  </script>
+
+</body>
+</html>
