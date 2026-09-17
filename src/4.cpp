@@ -13,6 +13,8 @@ int valorpwm=0;
 const int led=2;
 const int pote=26;      //analogica
 
+String texto_on_off="ON", tension;
+
 volatile bool configuracion=false;
 
 // pagina
@@ -21,6 +23,7 @@ const char pagina_template[] PROGMEM = R"rawliteral(
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="refresh" content="1">
 <title>Monitor Tensión</title>
 <style>
   body {
@@ -81,39 +84,23 @@ const char pagina_template[] PROGMEM = R"rawliteral(
 
   <div class="borde">
     <div class="pantalla" id="pantalla">
-      <span id="texto">&nbsp;&nbsp;Tensión: <strong id="valor">5.00</strong>V</span>
+      <span id="texto">&nbsp;&nbsp;Tensión: <strong id="valor">__TENSION__</strong>V</span>
     </div>
   </div>
 
-  <a href="/off"><button class="boton" id="botonToggle" onclick="toggleLed()">APAGAR</button></a>
+  <a href="/off"><button class="boton" id="botonToggle">__TEXTO_ON_OFF__</button></a>
 
-  <script>
-    let encendido = true;
-
-    function toggleLed() {
-      encendido = !encendido;
-      const pantalla = document.getElementById('pantalla');
-      const texto = document.getElementById('texto');
-      const boton = document.getElementById('botonToggle');
-
-      if (encendido) {
-        pantalla.classList.remove('apagada');
-        texto.style.visibility = 'visible';
-        boton.textContent = 'APAGAR';
-      } else {
-        pantalla.classList.add('apagada');
-        texto.style.visibility = 'hidden';
-        boton.textContent = 'ENCENDER';
-      }
-    }
-  </script>
-
+ 
 </body>
 </html>
 )rawliteral";
 
-void adc(){
+void off(){
+  digitalWrite(led,LOW);
+}
 
+void on (){
+  analogWrite(led, valorpwm);
 }
 
 void setup() {
@@ -142,8 +129,15 @@ void setup() {
   Serial.print("Dirección IP: http://");
   Serial.println(WiFi.localIP());
 
+  server.on("/", [](){
+    String pagina = pagina_template;
+    pagina.replace("__TENSION__",tension);
+    pagina.replace("__TEXTO_ON_OFF__",texto_on_off);
+    server.send(200, "text/html", pagina);
+  });
+
   server.on("/off",[](){
-    configuracion!=configuracion;
+    configuracion=!configuracion;
     server.sendHeader("Location", "/");             //encendido/apagado
     server.send(302, "text/plain", ""); 
   });
@@ -154,7 +148,10 @@ void setup() {
 void loop() {
   server.handleClient();
 
-  valorpotenciometro=analogRead(pote);
-  valorpwm=map(valorpotenciometro,0,4095,0,255);
-  analogWrite
+  valorpotenciometro = analogRead(pote);
+  valorpwm = map(valorpotenciometro, 0, 4095, 0, 255);
+  tension = valorpwm;
+
+  if(configuracion == false) {off(); texto_on_off="ON";}
+  if(configuracion == true) {on(); texto_on_off="OFF";}
 }

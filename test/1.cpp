@@ -113,6 +113,11 @@ void setup() {
   Serial.print("Dirección IP: http://");
   Serial.println(WiFi.localIP());
 
+  server.on("/", [](){
+    String pagina = pagina_template;
+    server.send(200, "text/html", pagina);
+  });
+
   server.on("/an1",[](){
     animacion1=1;
     server.sendHeader("Location", "/"); // dice que la página se vaya a /

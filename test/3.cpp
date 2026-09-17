@@ -130,6 +130,11 @@ void setup() {
   Serial.print("Dirección IP: http://");
   Serial.println(WiFi.localIP());
 
+  server.on("/", [](){
+    String pagina = pagina_template;
+    server.send(200, "text/html", pagina);
+  });
+
   server.on("/l",[](){
     configuracion=1;
     server.sendHeader("Location", "/");             //para lento
